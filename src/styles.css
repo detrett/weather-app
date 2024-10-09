@@ -39,3 +39,53 @@ img {
 button:hover {
   cursor: pointer;
 }
+
+/* VARIABLES */
+
+:root {
+  /* Primary Theme Colors */
+  --theme-darker: #0e3636;
+  --theme-dark: #134a4a;
+  --theme-dark-alt: #175757;
+  --theme-primary: #196060;
+  --theme-secondary: #287474;
+  --theme-tertiary: #59a0a0;
+  --theme-light: #a1d0d0;
+  --theme-lighter: #cbe6e6;
+  --theme-lighter-alt: #f1f9f9;
+
+  /* Neutral Colors */
+  --black: #474747;
+  --neutral-dark: #5e5e5e;
+  --neutral-primary: #313131;
+  --neutral-primary-alt: #8b8b8b;
+  --neutral-secondary: #a2a2a2;
+  --neutral-tertiary: #b9b9b9;
+  --neutral-tertiary-alt: #c8c8c8;
+  --neutral-quaternary-alt: #dadada;
+  --neutral-light: #eaeaea;
+  --neutral-lighter: #f4f4f4;
+  --neutral-lighter-alt: #f8f8f8;
+  --white: #ffffff;
+}
+
+/* STYLES */
+body,
+html {
+  height: 100%;
+}
+
+.bg {
+  background-image: url(bg.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#search-nearby-btn {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
