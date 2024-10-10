@@ -7,99 +7,72 @@ export class Displayer {
     this.extraDays = extraDays;
 
     this.today = new Date();
-    this.nextDays = Array.from({ length: this.extraDays }, (_, i) =>
-      addDays(this.today, i)
-    );
-    this.timeRanges = ["0-3", "3-6", "6-9", "9-12", "12-15", "15-18", "18-21", "21-23"];
+    this.timeRanges = [
+      "0-3",
+      "3-6",
+      "6-9",
+      "9-12",
+      "12-15",
+      "15-18",
+      "18-21",
+      "21-23",
+    ];
   }
 
   setUnit(unit) {
     this.unit = unit;
   }
 
-  roundTemp(temp) {
-    return Math.round(temp);
-  }
-
-  calcAverageTemp(weather, range, dayIndex) {
-    // Calculate the start and end hour based on the range
-    const [start, end] = range.split("-").map(Number);
-    const rangeData = weather.days[dayIndex].hours.slice(start, end);
-
-    const totalTemp = rangeData.reduce((sum, entry) => sum + entry.temp, 0);
-    return this.roundTemp(totalTemp / rangeData.length);
-  }
-
-  calcAverageCondition(weather, range, dayIndex) {
-    const [start, end] = range.split("-").map(Number);
-    const rangeData = weather.days[dayIndex].hours.slice(start, end);
-    const conditionCount = {};
-
-    // Loop through the range data to count conditions
-    rangeData.forEach((data) => {
-      const condition = data.conditions;
-
-      // Increment the count for the current condition
-      if (conditionCount[condition]) {
-        conditionCount[condition]++;
-      } else {
-        conditionCount[condition] = 1;
-      }
-    });
-
-    // Find the condition with the highest count
-    let maxCount = 0;
-    let predominantCondition = "";
-
-    for (const [condition, count] of Object.entries(conditionCount)) {
-      if (count > maxCount) {
-        maxCount = count;
-        predominantCondition = condition;
-      }
-    }
-
-    return predominantCondition || 'No data';
-  }
-
-  displayToday(weather) {
+  displayToday(weatherData) {
     this.logger.display(format(this.today, "eeee"));
 
-    const temp = this.roundTemp(weather.currentConditions.temp);
+    const temp = weatherData.getTemperature();
     this.displayTemperature(temp);
 
-    const conditions = weather.currentConditions;
-    this.displayConditions(conditions);
+    const conditions = weatherData.getCondition();
+    this.displayConditions(conditions, weatherData.currentConditions);
 
-    this.displayIcon(conditions.conditions);
+    this.displayIcon(conditions);
   }
 
-  displayRanged(weather, dayIndex = 0) {
-    for (let i = 0; i < this.timeRanges.length; i++) {
-      const range = this.timeRanges[i];
-      this.logger.display(range, "darkgreen");
-
-      const avgTemp = this.calcAverageTemp(weather, range, dayIndex);
+  displayRanged(weatherData, dayIndex = 0) {
+    for (let range of this.timeRanges) {
+      const [start, end] = range.split('-').map(Number);
+      const rangeData = weatherData.getHourData(dayIndex, start, end);
+  
+      this.logger.display(range, 'darkgreen');
+  
+      const avgTemp = weatherData.calculateAverageTemp(rangeData);
       this.displayTemperature(avgTemp);
-
-      const avgCondition = this.calcAverageCondition(weather, range, dayIndex);
+  
+      const avgCondition = weatherData.calculatePredominantCondition(rangeData);
       this.displayIcon(avgCondition);
     }
   }
 
-  displayNextDays(weather) {
-    this.nextDays.forEach((day, index) => {
-      this.logger.display(format(day, "eee"));
+  displayNextDays(weatherData) {
+    const futureDates = Array.from({ length: this.extraDays }, (_, i) =>
+      format(addDays(this.today, i + 1), "eee")
+    );
 
-      const temp = this.roundTemp(weather.days[index + 1].temp);
-      this.displayTemperature(temp);
+    futureDates.forEach((dayName, index) => {
+      this.logger.display(dayName);
 
-      const condition = weather.days[index + 1].conditions;
-      this.displayIcon(condition);
+      const dayData = weatherData.getDayData(index + 1);
+      if (dayData) {
+        const temp = Math.round(dayData.temp);
+        this.displayTemperature(temp);
+
+        const condition = dayData.conditions;
+        this.displayIcon(condition);
+      } else {
+        this.logger.display("No data available", "Gray");
+      }
     });
   }
 
-  displayLocation(city) {
-    this.logger.display(city, "DarkMagenta");
+  displayLocation(location) {
+    this.logger.display(location, "DarkMagenta");
   }
 
   displayTemperature(temp) {
@@ -125,7 +98,7 @@ export class Displayer {
   }
 
   displayIcon(conditions) {
-    const condition = conditions.split(',')[0];
+    const condition = conditions.split(",")[0];
     this.logger.display(`Icon for ${condition}`, "Crimson");
   }
 }

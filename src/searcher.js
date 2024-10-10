@@ -1,3 +1,5 @@
+import { WeatherData } from "./weather-data.js";
+
 export class Searcher {
   constructor(
     logger,
@@ -11,6 +13,7 @@ export class Searcher {
     this.fetchWeatherByCity = fetchWeatherByCity;
     this.fetchWeatherByCoordinates = fetchWeatherByCoordinates;
     this.displayer = displayer;
+    this.weatherData = null;
 
     this.searchForm = document.getElementById("search-form");
     this.searchInput = document.getElementById("search-input");
@@ -47,6 +50,16 @@ export class Searcher {
       e.preventDefault();
       this.handleSearch();
     });
+
+    const thirdRow = document.getElementById("third-row");
+    thirdRow.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-day]");
+      if (!button) return;
+  
+      const dayIndex = parseInt(button.getAttribute("data-day"));      
+      // Display this data with Displayer
+      this.displayer.displayRanged(this.weatherData, dayIndex);
+    });
   }
 
   handleSearch() {
@@ -75,7 +88,10 @@ export class Searcher {
     this.fetchUserLocation()
       .then((userLocation) => {
         if (userLocation) {
-          return this.fetchWeatherByCity(userLocation.city, this.displayer.unit);
+          return this.fetchWeatherByCity(
+            userLocation.city,
+            this.displayer.unit
+          );
         } else {
           throw new Error("No location data available");
         }
@@ -87,19 +103,18 @@ export class Searcher {
     return input.replaceAll(" ", "%20").replaceAll(",", "%2C");
   }
 
-  displayData(weather) {
-    if (!weather) {
+  displayData(rawData) {
+    if (!rawData) {
       console.error("Weather data is undefined");
       return;
     }
 
-    const address =
-      weather.resolvedAddress || weather.city || "Location not found";
-    this.displayer.displayLocation(address.trimStart());
+    this.weatherData = new WeatherData(rawData);
 
-    this.displayer.displayToday(weather);
-    this.displayer.displayNextDays(weather);
-    this.displayer.displayRanged(weather, 0);
+    this.displayer.displayLocation(this.weatherData.getLocation());
 
+    this.displayer.displayToday(this.weatherData);
+    this.displayer.displayNextDays(this.weatherData);
+    this.displayer.displayRanged(this.weatherData, 0);
   }
 }
