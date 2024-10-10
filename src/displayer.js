@@ -1,16 +1,16 @@
 import { format, addDays } from "date-fns";
 
 export class Displayer {
-  constructor(logger, unit = "metric", extraDays = 4) {
+  constructor(logger, unit = "metric", extraDays = 5) {
     this.logger = logger;
     this.unit = unit;
     this.extraDays = extraDays;
 
     this.today = new Date();
     this.nextDays = Array.from({ length: this.extraDays }, (_, i) =>
-      addDays(this.today, i + 1)
+      addDays(this.today, i)
     );
-    this.timeRanges = ["0-6", "6-12", "12-18", "18-23"];
+    this.timeRanges = ["0-3", "3-6", "6-9", "9-12", "12-15", "15-18", "18-21", "21-23"];
   }
 
   setUnit(unit) {
@@ -21,18 +21,18 @@ export class Displayer {
     return Math.round(temp);
   }
 
-  calcAverageTemp(weather, range) {
+  calcAverageTemp(weather, range, dayIndex) {
     // Calculate the start and end hour based on the range
     const [start, end] = range.split("-").map(Number);
-    const rangeData = weather.days[0].hours.slice(start, end);
+    const rangeData = weather.days[dayIndex].hours.slice(start, end);
 
     const totalTemp = rangeData.reduce((sum, entry) => sum + entry.temp, 0);
     return this.roundTemp(totalTemp / rangeData.length);
   }
 
-  calcAverageCondition(weather, range) {
+  calcAverageCondition(weather, range, dayIndex) {
     const [start, end] = range.split("-").map(Number);
-    const rangeData = weather.days[0].hours.slice(start, end);
+    const rangeData = weather.days[dayIndex].hours.slice(start, end);
     const conditionCount = {};
 
     // Loop through the range data to count conditions
@@ -73,15 +73,15 @@ export class Displayer {
     this.displayIcon(conditions.conditions);
   }
 
-  displayTodayRanged(weather) {
+  displayRanged(weather, dayIndex = 0) {
     for (let i = 0; i < this.timeRanges.length; i++) {
       const range = this.timeRanges[i];
       this.logger.display(range, "darkgreen");
 
-      const avgTemp = this.calcAverageTemp(weather, range);
+      const avgTemp = this.calcAverageTemp(weather, range, dayIndex);
       this.displayTemperature(avgTemp);
 
-      const avgCondition = this.calcAverageCondition(weather, range);
+      const avgCondition = this.calcAverageCondition(weather, range, dayIndex);
       this.displayIcon(avgCondition);
     }
   }

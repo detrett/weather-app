@@ -1,28 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body class ="bg">
-  <form id="search-form" action="">
-    <input id="search-input" type="text" class="collapsible">
-    <div id="search-nearby-btn"><button type="button">Search nearby</button></div>
-  </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body class="bg">
+    <form id="search-form" action="">
+      <input id="search-input" type="text" class="collapsible" />
+      <div id="search-nearby-btn">
+        <button type="button">Search nearby</button>
+      </div>
+    </form>
 
-  <div class="toggle-button-cover">
-    <div class="button-cover">
-      <div class="button" id="toggle-unit">
-        <input name="checkbox" type="checkbox" class="checkbox">
-        <div class="knobs">
-          <span>Cº</span>
+    <div class="toggle-button-cover">
+      <div class="button-cover">
+        <div class="button" id="toggle-unit">
+          <input name="checkbox" type="checkbox" class="checkbox" />
+          <div class="knobs">
+            <span>Cº</span>
+          </div>
+          <div class="layer"></div>
         </div>
-        <div class="layer"></div>
       </div>
     </div>
-  </div>
 
-  <!-- <a href="https://www.vecteezy.com/free-vector/mountain-background">Mountain Background Vectors by Vecteezy</a> -->
-</body>
+    <div id="main-container">
+      <div id="first-row">
+        <h1>Oslo</h1>
+      </div>
+
+      <div id="second-row">
+        <div id="main-condition">
+          <div id="main-weather-icon"></div>
+          <div id="main-weather-condition">Partly cloudy</div>
+        </div>
+        <div id="main-temp">
+          <h2>12 Cº</h2>
+        </div>
+        <div id="extra-conditions">
+          <div data-target="precip">Precip. mm: 0</div>
+          <div data-target="uvindex">UV index: 1</div>
+          <div data-target="wind">Wind (Gust) m/s: 2 (3)</div>
+        </div>
+      </div>
+
+      <div id="third-row">
+        <div class="info-day-column" data-day="day-0">
+          <span>Thu</span>
+          <span data-icon="icon-day-0" class="icon"></span>
+          <span class="temp">11 Cº</span>
+        </div>
+        <div class="info-day-column" data-day="day-1">
+          <span>E1</span>
+          <span data-icon="icon-day-1" class="icon"></span>
+          <span class="temp">E3</span>
+        </div>
+        <div class="info-day-column" data-day="day-2">
+          <span>F1</span>
+          <span data-icon="icon-day-2" class="icon"></span>
+          <span class="temp">F3</span>
+        </div>
+        <div class="info-day-column" data-day="day-3">
+          <span>G1</span>
+          <span data-icon="icon-day-3" class="icon"></span>
+          <span class="temp">G3</span>
+        </div>
+        <div class="info-day-column" data-day="day-4">
+          <span>H1</span>
+          <span data-icon="icon-day-4" class="icon"></span>
+          <span class="temp">H3</span>
+        </div>
+      </div>
+
+      <div id="fourth-row">
+        <div class="range-day-column" data-range="range-0">
+          <span>0-3</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-1">
+          <span>3-6</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-2">
+          <span>6-9</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-3">
+          <span>9-12</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-4">
+          <span>12-15</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-5">
+          <span>15-18</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-6">
+          <span>18-21</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+        <div class="range-day-column" data-range="range-7">
+          <span>21-23</span>
+          <span class="icon"></span>
+          <span class="temp">10 Cº</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- <a href="https://www.vecteezy.com/free-vector/mountain-background">Mountain Background Vectors by Vecteezy</a> -->
+  </body>
 </html>

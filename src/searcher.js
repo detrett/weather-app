@@ -39,21 +39,7 @@ export class Searcher {
     });
 
     this.searchNearbyBtn.addEventListener("click", () => {
-      this.logger.info("Searching nearby");
-      this.fetchUserLocation()
-        .then((userLocation) => {
-          if (userLocation) {
-            const { city, latitude, longitude } = userLocation;
-            return this.fetchWeatherByCoordinates(
-              latitude,
-              longitude,
-              this.unit
-            );
-          } else {
-            throw new Error("No location data available");
-          }
-        })
-        .then((weather) => this.displayData(weather));
+      this.searchNearby();
       this.searchNearbyBtn.classList.remove("active");
     });
 
@@ -69,9 +55,11 @@ export class Searcher {
 
     if (this.coordinatesRegex.test(input)) {
       const [latitude, longitude] = input.split(",").map((x) => x.trim());
-      this.fetchWeatherByCoordinates(latitude, longitude, this.displayer.unit).then(
-        (weather) => this.displayData(weather)
-      );
+      this.fetchWeatherByCoordinates(
+        latitude,
+        longitude,
+        this.displayer.unit
+      ).then((weather) => this.displayData(weather));
     } else {
       const formattedInput = this.formatSearchCity(input);
       this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
@@ -82,14 +70,36 @@ export class Searcher {
     this.searchInput.value = "";
   }
 
+  searchNearby() {
+    this.logger.info("Searching nearby");
+    this.fetchUserLocation()
+      .then((userLocation) => {
+        if (userLocation) {
+          return this.fetchWeatherByCity(userLocation.city, this.displayer.unit);
+        } else {
+          throw new Error("No location data available");
+        }
+      })
+      .then((weather) => this.displayData(weather));
+  }
+
   formatSearchCity(input) {
     return input.replaceAll(" ", "%20").replaceAll(",", "%2C");
   }
 
   displayData(weather) {
-    this.displayer.displayLocation(weather.resolvedAddress.trimStart());
+    if (!weather) {
+      console.error("Weather data is undefined");
+      return;
+    }
+
+    const address =
+      weather.resolvedAddress || weather.city || "Location not found";
+    this.displayer.displayLocation(address.trimStart());
+
     this.displayer.displayToday(weather);
-    this.displayer.displayTodayRanged(weather);
     this.displayer.displayNextDays(weather);
+    this.displayer.displayRanged(weather, 0);
+
   }
 }
