@@ -13,7 +13,7 @@ export class Logger {
     console.log(`%c ${this.timePassed()}s: ${string}`, 'font-weight: bold; color: #196060;');
   }
   // For data that would be displayed on the screen
-  display(string) {
-    console.log(`%c ${this.timePassed()}s: ${string}`, 'font-weight: bold; color: #fb5607;');
+  display(string, color='#fb5607') {
+    console.log(`%c ${this.timePassed()}s: ${string}`, `font-weight: bold; color:${color};`);
   }
 }

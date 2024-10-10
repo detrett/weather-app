@@ -1,16 +1,16 @@
-export class SearchLocationForm {
+export class Searcher {
   constructor(
     logger,
     fetchUserLocation,
     fetchWeatherByCity,
     fetchWeatherByCoordinates,
-    unit
+    displayer
   ) {
     this.logger = logger;
     this.fetchUserLocation = fetchUserLocation;
     this.fetchWeatherByCity = fetchWeatherByCity;
     this.fetchWeatherByCoordinates = fetchWeatherByCoordinates;
-    this.unit = unit;
+    this.displayer = displayer;
 
     this.searchForm = document.getElementById("search-form");
     this.searchInput = document.getElementById("search-input");
@@ -22,7 +22,7 @@ export class SearchLocationForm {
   }
 
   setUnit(unit) {
-    this.unit = unit;
+    this.displayer.setUnit(unit);
   }
 
   initialize() {
@@ -44,7 +44,6 @@ export class SearchLocationForm {
         .then((userLocation) => {
           if (userLocation) {
             const { city, latitude, longitude } = userLocation;
-            this.displayLocation(city);
             return this.fetchWeatherByCoordinates(
               latitude,
               longitude,
@@ -54,7 +53,7 @@ export class SearchLocationForm {
             throw new Error("No location data available");
           }
         })
-        .then((weather) => this.displayWeather(weather));
+        .then((weather) => this.displayData(weather));
       this.searchNearbyBtn.classList.remove("active");
     });
 
@@ -70,13 +69,13 @@ export class SearchLocationForm {
 
     if (this.coordinatesRegex.test(input)) {
       const [latitude, longitude] = input.split(",").map((x) => x.trim());
-      this.fetchWeatherByCoordinates(latitude, longitude, this.unit).then(
-        (weather) => this.displayWeather(weather)
+      this.fetchWeatherByCoordinates(latitude, longitude, this.displayer.unit).then(
+        (weather) => this.displayData(weather)
       );
     } else {
       const formattedInput = this.formatSearchCity(input);
-      this.fetchWeatherByCity(formattedInput, this.unit).then(
-        (weather) => this.displayWeather(weather)
+      this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
+        (weather) => this.displayData(weather)
       );
     }
 
@@ -87,11 +86,10 @@ export class SearchLocationForm {
     return input.replaceAll(" ", "%20").replaceAll(",", "%2C");
   }
 
-  displayLocation(city) {
-    this.logger.display(city);
-  }
-
-  displayWeather(weather) {
-    this.logger.display(weather.currentConditions.conditions);
+  displayData(weather) {
+    this.displayer.displayLocation(weather.resolvedAddress.trimStart());
+    this.displayer.displayToday(weather);
+    this.displayer.displayTodayRanged(weather);
+    this.displayer.displayNextDays(weather);
   }
 }

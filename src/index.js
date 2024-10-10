@@ -1,57 +1,37 @@
-import "./styles.css";
-import { Logger } from "./logger.js";
+import './styles.css';
+import { Logger } from './logger.js';
+import { Searcher } from './searcher.js';
+import { Displayer } from './displayer.js';
 import {
   fetchUserLocation,
   fetchWeatherByCity,
   fetchWeatherByCoordinates,
-} from "./fetcher.js";
-import { SearchLocationForm } from "./searcher.js";
+} from './fetcher.js';
+import { addDays, format } from 'date-fns';
 
-// TODO: Switch to convert units
+// Time
 // Display data
 // Style
 
 const logger = new Logger();
-logger.info("Start");
+let unit = 'metric'
+const displayer = new Displayer(logger, unit);
 
-let unit = "metric";
-
-const searchLocationForm = new SearchLocationForm(
+logger.info('Start');
+// Set up the search box
+const searcher = new Searcher(
   logger,
   fetchUserLocation,
   fetchWeatherByCity,
   fetchWeatherByCoordinates,
-  unit
+  displayer
 );
 
-const toggleUnitSwitch = document.querySelector("input[name=checkbox]");
-toggleUnitSwitch.addEventListener("change", () => {
-  if (toggleUnitSwitch.checked) {
-    unit = "us"
-    searchLocationForm.setUnit(unit);
-    logger.display("Temperature is now on Fº");
-  } else {
-    unit = "metric"
-    searchLocationForm.setUnit(unit);
-    logger.display("Temperature is now on Cº");
-  }
-})
+// Set up the temp toggle switch
+const toggleUnitSwitch = document.querySelector('input[name=checkbox]');
+toggleUnitSwitch.addEventListener('change', () => {
+  const newUnit = toggleUnitSwitch.checked ? 'us' : 'metric';
+  searcher.setUnit(newUnit);
+  logger.display(`Temperature is now in ${newUnit === 'metric' ? 'Cº' : 'Fº'}`);
+});
 
-
-
-
-
-
-// fetchUserLocation()
-//   .then((userLocation) => {
-//     if (userLocation) {
-//       const { city, latitude, longitude } = userLocation;
-//       displayLocation(city);
-//       return fetchWeatherByCoordinates(latitude, longitude);
-//     } else {
-//       throw new Error('No location data available');
-//     }
-//   })
-//   .then(displayWeather);
-
-// fetchWeatherByCity('Oslo', unit).then(displayWeather);
