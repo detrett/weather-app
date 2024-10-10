@@ -24,6 +24,22 @@ const searchLocationForm = new SearchLocationForm(
   unit
 );
 
+const toggleUnitSwitch = document.querySelector("input[name=checkbox]");
+toggleUnitSwitch.addEventListener("change", () => {
+  if (toggleUnitSwitch.checked) {
+    unit = "us"
+    searchLocationForm.setUnit(unit);
+    logger.display("Temperature is now on Fº");
+  } else {
+    unit = "metric"
+    searchLocationForm.setUnit(unit);
+    logger.display("Temperature is now on Cº");
+  }
+})
+
+
+
+
 
 
 // fetchUserLocation()

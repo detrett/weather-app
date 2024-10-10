@@ -21,6 +21,10 @@ export class SearchLocationForm {
     this.initialize();
   }
 
+  setUnit(unit) {
+    this.unit = unit;
+  }
+
   initialize() {
     this.searchInput.addEventListener("click", () => {
       this.searchNearbyBtn.classList.add("active");
