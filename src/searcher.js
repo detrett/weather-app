@@ -21,6 +21,8 @@ export class Searcher {
     // Regular expression to check if the search input is in latitude,longitude format
     this.coordinatesRegex = /^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/;
 
+    this.currentlyActive = 0;
+
     this.initialize();
   }
 
@@ -51,15 +53,24 @@ export class Searcher {
       this.handleSearch();
     });
 
-    const thirdRow = document.getElementById("third-row");
-    thirdRow.addEventListener("click", (event) => {
-      const button = event.target.closest("button[data-day]");
-      if (!button) return;
-  
-      const dayIndex = parseInt(button.getAttribute("data-day"));      
-      // Display this data with Displayer
-      this.displayer.displayRanged(this.weatherData, dayIndex);
-    });
+    // const thirdRow = document.getElementById("third-row");
+    // thirdRow.addEventListener("click", (event) => {
+    //   const button = event.target.closest("button[data-day]");
+    //   if (!button) return;
+
+    //   // Remove 'active' class from all buttons
+    //   thirdRow.querySelectorAll("button[data-day]").forEach((btn) => {
+    //     btn.classList.remove("active");
+    //   });
+
+    //   // Add 'active' class to the clicked button
+    //   button.classList.add("active");
+
+    //   this.currentlyActive = parseInt(button.getAttribute("data-day"));
+
+    //   // Display this data with Displayer
+    //   this.displayer.displayRanged(this.weatherData, this.currentlyActive);
+    // });
   }
 
   handleSearch() {
@@ -110,11 +121,9 @@ export class Searcher {
     }
 
     this.weatherData = new WeatherData(rawData);
-
     this.displayer.displayLocation(this.weatherData.getLocation());
-
     this.displayer.displayToday(this.weatherData);
     this.displayer.displayNextDays(this.weatherData);
-    this.displayer.displayRanged(this.weatherData, 0);
+    this.displayer.displayRanged(this.weatherData, this.currentlyActive);
   }
 }

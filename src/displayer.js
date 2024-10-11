@@ -24,81 +24,97 @@ export class Displayer {
   }
 
   displayToday(weatherData) {
-    this.logger.display(format(this.today, "eeee"));
+    // this.logger.display(format(this.today, "eeee"));
 
+    const tempElement = document.getElementById("main-temp");
     const temp = weatherData.getTemperature();
-    this.displayTemperature(temp);
+    this.displayTemperature(tempElement, temp);
 
-    const conditions = weatherData.getCondition();
-    this.displayConditions(conditions, weatherData.currentConditions);
+    const condition = weatherData.getCondition();
+    this.displayConditions(condition, weatherData.currentConditions);
 
-    this.displayIcon(conditions);
-  }
-
-  displayRanged(weatherData, dayIndex = 0) {
-    for (let range of this.timeRanges) {
-      const [start, end] = range.split('-').map(Number);
-      const rangeData = weatherData.getHourData(dayIndex, start, end);
-  
-      this.logger.display(range, 'darkgreen');
-  
-      const avgTemp = weatherData.calculateAverageTemp(rangeData);
-      this.displayTemperature(avgTemp);
-  
-      const avgCondition = weatherData.calculatePredominantCondition(rangeData);
-      this.displayIcon(avgCondition);
-    }
+    const iconElement = document.getElementById("main-weather-icon");
+    const iconName = weatherData.getIcon();
+    this.displayIcon(iconElement, iconName);
   }
 
   displayNextDays(weatherData) {
     const futureDates = Array.from({ length: this.extraDays }, (_, i) =>
-      format(addDays(this.today, i + 1), "eee")
+      format(addDays(this.today, i), "eee")
     );
 
     futureDates.forEach((dayName, index) => {
-      this.logger.display(dayName);
+      const dayNameElement = document.querySelector(`[data-day="${index}"] > span.day`);
+      dayNameElement.textContent = dayName;
 
       const dayData = weatherData.getDayData(index + 1);
       if (dayData) {
+        const tempElement = document.querySelector(`[data-day="${index}"] span.temp`);
         const temp = Math.round(dayData.temp);
-        this.displayTemperature(temp);
+        this.displayTemperature(tempElement, temp);
 
-        const condition = dayData.conditions;
-        this.displayIcon(condition);
+        const iconElement = document.querySelector(`[data-day="${index}"] span.icon`);
+        const iconName = dayData.icon;
+        this.displayIcon(iconElement, iconName);
       } else {
-        this.logger.display("No data available", "Gray");
+        this.logger.info("No data available", "Gray");
       }
     });
   }
 
+  displayRanged(weatherData, dayIndex = 0) {
+    let index = 0;
+    for (let range of this.timeRanges) {
+      const [start, end] = range.split("-").map(Number);
+      const rangeData = weatherData.getHourData(dayIndex, start, end);
+
+      this.logger.info(range, "darkgreen");
+      
+      const tempElement = document.querySelector(`[data-range="${index}"] span.temp`);
+      const avgTemp = weatherData.calculateAverageTemp(rangeData);
+      this.displayTemperature(tempElement, avgTemp);
+
+      const iconName = weatherData.calculatePredominantCondition(rangeData);
+      const iconElement = document.querySelector(`[data-range="${index}"] span.icon`);
+      this.displayIcon(iconElement, iconName);
+
+      index++;
+    }
+  }
+
   displayLocation(location) {
-    this.logger.display(location, "DarkMagenta");
+    const locationElement = document.getElementById("location");
+    locationElement.textContent = location;
   }
 
-  displayTemperature(temp) {
+  displayTemperature(element, temp) {
     const tempUnit = this.unit === "metric" ? "Cº" : "Fº";
-    this.logger.display(`${temp} ${tempUnit}`, "Indigo");
+    element.textContent = `${temp} ${tempUnit}`;
   }
 
-  displayConditions(conditions) {
-    this.logger.display(conditions.conditions, "DarkSlateBlue");
+  displayConditions(condition, conditions) {
+    const mainConditionElement = document.getElementById(
+      "main-weather-condition"
+    );
+    this.logger.info(condition + "0");
+    mainConditionElement.textContent = condition;
+
+    const precipElement = document.querySelector('[data-target="precip"]');
     const precipUnit = this.unit === "metric" ? "mm" : "in";
-    this.logger.display(
-      `Precip. ${precipUnit}: ${conditions.precip}`,
-      "DarkSlateBlue"
-    );
-    this.logger.display(`UV Index: ${conditions.uvindex}`, "DarkSlateBlue");
+    precipElement.textContent = `Precip. ${precipUnit}: ${conditions.precip}`;
+
+    const uvIndexElement = document.querySelector('[data-target="uvindex"]');
+    uvIndexElement.textContent = `UV Index: ${conditions.uvindex}`;
+
+    const windElement = document.querySelector('[data-target="wind"]');
     const windSpeedUnit = this.unit === "metric" ? "m/s" : "mph";
-    this.logger.display(
-      `Wind (Gust) ${windSpeedUnit}: ${Math.round(
-        conditions.windspeed
-      )}(${Math.round(conditions.windgust)})`,
-      "DarkSlateBlue"
-    );
+    windElement.textContent = `Wind (Gust) ${windSpeedUnit}: ${Math.round(
+      conditions.windspeed
+    )}(${Math.round(conditions.windgust)})`;
   }
 
-  displayIcon(conditions) {
-    const condition = conditions.split(",")[0];
-    this.logger.display(`Icon for ${condition}`, "Crimson");
+  displayIcon(iconElement, iconName) {
+    iconElement.className = `icon ${iconName}`
+    this.logger.display(`Icon for ${iconName}`, "Crimson");
   }
 }

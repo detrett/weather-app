@@ -105,6 +105,7 @@ html {
 
   & #first-row {
     justify-self: center;
+    align-self: center;
   }
 
   & #third-row, #fourth-row{
@@ -127,7 +128,7 @@ html {
     & #main-weather-icon {
       width: 6rem;
       height: 6rem;
-      background-color: var(--theme-tertiary);
+      margin: auto;
     }
 
     & #main-weather-condition {
@@ -135,7 +136,7 @@ html {
     }
   }
 
-  & #main-temp {
+  & #main-temp-container {
     margin: auto;
   }
 
@@ -148,14 +149,44 @@ html {
 }
 
 #third-row {
+  position: relative;
 
   & .info-day-column {
+    background-color: transparent;
+    border: none;
+  
     margin: auto;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     align-items: center;
+    padding: 1rem;
+
+    color: white;
+
+    transition: transform 0.3s ease, border-color 0.3s ease;
+
+    &.active {
+      border: 1px solid white;
+      border-radius: 8px;
+      transition: translate 0.5s linear;
+      transform: translateY(-4px);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    }
   }
+    
+}
+
+#third-row::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 2px; /* Border thickness */
+  background-color: white;
+  width: 100%; /* Match button width (100% / number of buttons) */
+  left: 0;
+  transition: left 0.3s ease;
 }
 
 #fourth-row {
@@ -169,11 +200,6 @@ html {
   }
 }
 
-.icon {
-  width: 2rem;
-  height: 2rem;
-  background-color: var(--theme-secondary);
-}
 /*Toggle switch button*/
 
 .toggle-button-cover {
@@ -297,4 +323,54 @@ html {
 
 .checkbox:checked .layer {
   background-color: #fcebeb;
+}
+
+/* ICONS */
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.clear-day {
+  background-image: url(icons/clear-day.png);
+}
+
+.clear-night {
+  background-image: url(icons/clear-night.png);
+}
+
+.cloudy {
+  background-image: url(icons/cloudy.png);
+}
+
+.partly-cloudy-day {
+  background-image: url(icons/partly-cloudy-day.png);
+}
+
+.partly-cloudy-night {
+  background-image: url(icons/partly-cloudy-night.png);
+}
+
+.rain {
+  background-image: url(icons/rain.png);
+}
+
+.wind {
+  background-image: url(icons/wind.png);
+}
+
+.fog {
+  background-image: url(icons/fog.png);
+}
+
+.thunder {
+  background-image: url(icons/thunder.png);
+}
+
+.snow {
+  background-image: url(icons/snow.png);
 }

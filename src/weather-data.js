@@ -7,7 +7,7 @@ export class WeatherData {
   }
 
   getTemperature() {
-    return this.currentConditions.temp;
+    return Math.round(this.currentConditions.temp);
   }
 
   getCondition() {
@@ -20,6 +20,10 @@ export class WeatherData {
 
   getDayData(dayIndex) {
     return this.days[dayIndex] || null;
+  }
+
+  getIcon() {
+    return this.currentConditions.icon;
   }
 
   getHourData(dayIndex, startHour, endHour) {
@@ -35,7 +39,7 @@ export class WeatherData {
     const conditionCount = {};
 
     rangeData.forEach((entry) => {
-      const condition = entry.conditions.split(',')[0];
+      const condition = entry.icon;
       conditionCount[condition] = (conditionCount[condition] || 0) + 1;
     });
 
