@@ -78,7 +78,7 @@ html {
 }
 
 .bg {
-  background-image: url(bg.jpg);
+  background-image: url(bg5.jpg);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -105,7 +105,7 @@ html {
   padding-block: 2.5%;
 
   display: grid;
-  grid-template-rows: 10fr 40fr 15fr 35fr;
+  grid-template-rows: 10fr 45fr 15fr 30fr;
 
   & #first-row {
     justify-self: center;
@@ -121,6 +121,7 @@ html {
 #second-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  padding-block-end: 2rem;
   align-items: center;
 
   & #main-condition {
@@ -155,6 +156,7 @@ html {
 #third-row {
   position: relative;
   padding-block-start: 1%;
+  margin-block-end: 2rem;
 
   & .info-day-column {
     background-color: transparent;

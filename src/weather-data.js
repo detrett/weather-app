@@ -12,7 +12,7 @@ export class WeatherData {
   }
 
   convertCtoF(temp) {
-    return Math.round(temp * 1.8 + 32);
+    return Math.round((temp * 1.8) + 32);
   }
 
   convertFtoC(temp) {

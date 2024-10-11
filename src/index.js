@@ -31,8 +31,10 @@ searcher.handleSearch("Oslo");
 const toggleUnitSwitch = document.querySelector("input[name=checkbox]");
 toggleUnitSwitch.addEventListener("change", () => {
   const newUnit = toggleUnitSwitch.checked ? "us" : "metric";
-  searcher.setUnit(newUnit);
-  logger.display(`Temperature is now in ${newUnit === "metric" ? "Cº" : "Fº"}`);
+
+  searcher.convertTemperatures(newUnit);
+
+  logger.display(`Current unit: ${newUnit}`);
 });
 
 // Active weather range being displayed

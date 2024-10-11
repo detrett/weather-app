@@ -26,8 +26,8 @@ export class Searcher {
     this.initialize();
   }
 
-  setUnit(unit) {
-    this.displayer.setUnit(unit, this.weatherData);
+  convertTemperatures(newUnit) {
+    this.displayer.convertTemperatures(newUnit, this.weatherData);
   }
 
   initialize() {
@@ -56,6 +56,7 @@ export class Searcher {
 
   handleSearch(manualInput = "") {
     if (manualInput) {
+      this.displayer.originalUnit = this.displayer.currentUnit;
       if (this.coordinatesRegex.test(manualInput)) {
         const [latitude, longitude] = manualInput
           .split(",")
@@ -63,28 +64,29 @@ export class Searcher {
         this.fetchWeatherByCoordinates(
           latitude,
           longitude,
-          this.displayer.unit
+          this.displayer.originalUnit
         ).then((weather) => this.displayData(weather));
       } else {
         const formattedInput = this.formatSearchCity(manualInput);
-        this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
+        this.fetchWeatherByCity(formattedInput, this.displayer.originalUnit).then(
           (weather) => this.displayData(weather)
         );
       }
     } else {
       const input = this.searchInput.value;
       this.logger.info("Search submitted");
+      this.displayer.originalUnit = this.displayer.currentUnit;
 
       if (this.coordinatesRegex.test(input)) {
         const [latitude, longitude] = input.split(",").map((x) => x.trim());
         this.fetchWeatherByCoordinates(
           latitude,
           longitude,
-          this.displayer.unit
+          this.displayer.originalUnit
         ).then((weather) => this.displayData(weather));
       } else {
         const formattedInput = this.formatSearchCity(input);
-        this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
+        this.fetchWeatherByCity(formattedInput, this.displayer.originalUnit).then(
           (weather) => this.displayData(weather)
         );
       }
@@ -100,7 +102,7 @@ export class Searcher {
         if (userLocation) {
           return this.fetchWeatherByCity(
             userLocation.city,
-            this.displayer.unit
+            this.displayer.currentUnit
           );
         } else {
           throw new Error("No location data available");

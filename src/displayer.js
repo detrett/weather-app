@@ -3,7 +3,8 @@ import { format, addDays } from "date-fns";
 export class Displayer {
   constructor(logger, unit = "metric", extraDays = 5) {
     this.logger = logger;
-    this.unit = unit;
+    this.originalUnit = unit;
+    this.currentUnit = unit;
     this.extraDays = extraDays;
     this.convertTemp = false;
 
@@ -20,20 +21,21 @@ export class Displayer {
     ];
   }
 
-  setUnit(unit, weatherData = null) {
-    this.unit = unit;
+  convertTemperatures(newUnit, weatherData) {
+    if (newUnit === this.originalUnit) {
+      this.convertTemp = false;
+      this.currentUnit = this.originalUnit;
 
-    this.convertTemperatures(weatherData);
-  }
-
-  convertTemperatures(weatherData) {
-    this.convertTemp = true;
-
-    if (weatherData) {
       this.displayToday(weatherData);
       this.displayNextDays(weatherData);
       this.displayRanged(weatherData);
+    } else {
+      this.convertTemp = true;
+      this.currentUnit = newUnit;
 
+      this.displayToday(weatherData);
+      this.displayNextDays(weatherData);
+      this.displayRanged(weatherData);
       this.convertTemp = false;
     }
   }
@@ -44,7 +46,7 @@ export class Displayer {
 
     if (this.convertTemp === true) {
       temp =
-        this.unit === "metric"
+        this.currentUnit === "metric"
           ? weatherData.convertFtoC(temp)
           : weatherData.convertCtoF(temp);
     }
@@ -79,7 +81,7 @@ export class Displayer {
 
         if (this.convertTemp === true) {
           temp =
-            this.unit === "metric"
+            this.currentUnit === "metric"
               ? weatherData.convertFtoC(temp)
               : weatherData.convertCtoF(temp);
         }
@@ -110,7 +112,7 @@ export class Displayer {
 
       if (this.convertTemp === true) {
         avgTemp =
-          this.unit === "metric"
+          this.currentUnit === "metric"
             ? weatherData.convertFtoC(avgTemp)
             : weatherData.convertCtoF(avgTemp);
       }
@@ -133,7 +135,7 @@ export class Displayer {
   }
 
   displayTemperature(element, temp) {
-    const tempUnit = this.unit === "metric" ? "Cº" : "Fº";
+    const tempUnit = this.currentUnit === "metric" ? "Cº" : "Fº";
     element.textContent = `${temp} ${tempUnit}`;
   }
 
@@ -144,20 +146,27 @@ export class Displayer {
     mainConditionElement.textContent = condition;
 
     const precipElement = document.querySelector('[data-target="precip"]');
-    const precipUnit = this.unit === "metric" ? "mm" : "in";
-    precipElement.textContent = `Precip. ${precipUnit}: ${conditions.precip}`;
+    const precipUnit = this.currentUnit === "metric" ? "mm" : "in";
+    precipElement.textContent = `Precip: ${conditions.precip} ${precipUnit}`;
 
     const uvIndexElement = document.querySelector('[data-target="uvindex"]');
     uvIndexElement.textContent = `UV Index: ${conditions.uvindex}`;
 
     const windElement = document.querySelector('[data-target="wind"]');
-    const windSpeedUnit = this.unit === "metric" ? "m/s" : "mph";
-    windElement.textContent = `Wind (Gust) ${windSpeedUnit}: ${Math.round(
+    const windSpeedUnit = this.currentUnit === "metric" ? "m/s" : "mph";
+    windElement.textContent = `Wind (Gust): ${Math.round(
       conditions.windspeed
-    )}(${Math.round(conditions.windgust)})`;
+    )} (${Math.round(conditions.windgust)}) ${windSpeedUnit}`;
   }
 
   displayIcon(iconElement, iconName) {
+    const words = iconName.split("-"); // Split by hyphen
+    const title =
+      words[0].charAt(0).toUpperCase() +
+      words[0].slice(1) +
+      " " +
+      words.slice(1).join(" ").toLowerCase();
+    iconElement.title = title;
     iconElement.className = `icon ${iconName}`;
   }
 }
