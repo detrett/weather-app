@@ -9,7 +9,7 @@ export async function fetchUserLocation() {
   try {
     logger.info("Fetching location data");
 
-    const url = `http://api.ipstack.com/check?access_key=${ipstackAccessKey}`;
+    const url = `https://api.ipstack.com/check?access_key=${ipstackAccessKey}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`Response status ${response.status}`);
