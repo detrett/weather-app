@@ -24,8 +24,8 @@ const searcher = new Searcher(
 );
 
 searcher.currentlyActive = 0;
-searcher.handleSearch("Oslo");
-// searcher.searchNearby();
+// searcher.handleSearch("Oslo");
+searcher.searchNearby();
 
 // Set up the temp toggle switch
 const toggleUnitSwitch = document.querySelector("input[name=checkbox]");
