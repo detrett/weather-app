@@ -107,7 +107,7 @@ html {
   display: flex;
   gap: 2rem;
   margin: auto;
-  margin-block: 2rem 1rem;
+  margin-block: 4rem 1rem;
 
   & #search-form {
     align-self: flex-end;
@@ -155,7 +155,7 @@ html {
 /* Main container */
 
 #main-container {
-  background-color: var(--theme-primary);
+  background-color: #0e3636e0;
   color: var(--neutral-light);
   border-radius: 24px;
   width: 60%;
@@ -376,6 +376,7 @@ html {
 .layer {
   width: 100%;
   background-color: var(--theme-lighter);
+  border: 1px solid var(--theme-primary);
   border-radius: 24px;
   transition: 0.3s ease all;
   z-index: 1;
