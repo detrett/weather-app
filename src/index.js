@@ -23,6 +23,10 @@ const searcher = new Searcher(
   displayer
 );
 
+searcher.currentlyActive = 0;
+searcher.handleSearch("Oslo");
+// searcher.searchNearby();
+
 // Set up the temp toggle switch
 const toggleUnitSwitch = document.querySelector("input[name=checkbox]");
 toggleUnitSwitch.addEventListener("change", () => {
@@ -31,24 +35,35 @@ toggleUnitSwitch.addEventListener("change", () => {
   logger.display(`Temperature is now in ${newUnit === "metric" ? "Cº" : "Fº"}`);
 });
 
-
 // Active weather range being displayed
 const thirdRow = document.getElementById("third-row");
+const buttons = thirdRow.querySelectorAll(".info-day-column");
 
 thirdRow.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-day]");
   if (!button) return;
 
   // Remove 'active' class from all buttons
-  thirdRow.querySelectorAll("button[data-day]").forEach((btn) => {
-    btn.classList.remove("active");
-  });
+  buttons.forEach((btn) => btn.classList.remove("active"));
 
   // Add 'active' class to the clicked button
   button.classList.add("active");
 
   searcher.currentlyActive = parseInt(button.getAttribute("data-day"));
+  const buttonWidth = 100 / buttons.length;
 
+  thirdRow.style.setProperty(
+    "--indicator-position",
+    `${searcher.currentlyActive * buttonWidth}%`
+  );
   // Display this data with Displayer
-  searcher.displayer.displayRanged(searcher.weatherData, searcher.currentlyActive);
+  searcher.updateRangedDisplay(
+    searcher.weatherData,
+    searcher.currentlyActive
+  );
+});
+
+// Ensure the border starts at the first day
+window.addEventListener("load", () => {
+  document.documentElement.style.setProperty("--indicator-position", "0px");
 });

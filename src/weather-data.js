@@ -3,11 +3,20 @@ export class WeatherData {
     this.weather = weather;
     this.currentConditions = weather.currentConditions || {};
     this.days = weather.days || [];
+    this.temp = Math.round(this.currentConditions.temp);
     this.address = weather.resolvedAddress || weatherData.city || "Location not found";
   }
 
   getTemperature() {
-    return Math.round(this.currentConditions.temp);
+    return this.temp;
+  }
+
+  convertCtoF(temp) {
+    return Math.round(temp * 1.8 + 32);
+  }
+
+  convertFtoC(temp) {
+    return Math.round((temp - 32) * 5 / 9);
   }
 
   getCondition() {

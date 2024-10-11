@@ -43,6 +43,8 @@ button:hover {
 /* VARIABLES */
 
 :root {
+  --indicator-position: 0;
+
   /* Primary Theme Colors */
   --theme-darker: #0e3636;
   --theme-dark: #134a4a;
@@ -97,8 +99,10 @@ html {
   color: var(--neutral-light);
   border-radius: 12px;
   width: 60%;
-  height: 60%;
+  height: 70%;
   margin: auto;
+  padding-inline: 2.5%;
+  padding-block: 2.5%;
 
   display: grid;
   grid-template-rows: 10fr 40fr 15fr 35fr;
@@ -150,6 +154,7 @@ html {
 
 #third-row {
   position: relative;
+  padding-block-start: 1%;
 
   & .info-day-column {
     background-color: transparent;
@@ -167,12 +172,10 @@ html {
     transition: transform 0.3s ease, border-color 0.3s ease;
 
     &.active {
-      border: 1px solid white;
-      border-radius: 8px;
+      background-color: var(--theme-darker);
       transition: translate 0.5s linear;
       transform: translateY(-4px);
       transition: transform 0.3s ease, border-color 0.3s ease;
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
     }
   }
     
@@ -181,11 +184,14 @@ html {
 #third-row::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  height: 2px; /* Border thickness */
-  background-color: white;
-  width: 100%; /* Match button width (100% / number of buttons) */
-  left: 0;
+  bottom: -4px;
+  height: 100%;
+  border: 2px solid white; /* Border thickness */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background-color: transparent;
+  width: 10%; /* Match button width (100% / number of buttons) */
+  left: calc(var(--indicator-position, 0) + 5%);
   transition: left 0.3s ease;
 }
 

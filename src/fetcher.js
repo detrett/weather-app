@@ -2,7 +2,7 @@ import { Logger } from "./logger.js";
 
 const logger = new Logger();
 
-const ipstackAccessKey = "efb68c0b839d08c4eea31d47271a3dbe";
+const ipstackAccessKey = "9b3f30259e7b4638583ed9a8134f4490";
 const weatherAccessKey = "RZQHQRQUZ9NVY77XFMB6C5H9W";
 
 export async function fetchUserLocation() {

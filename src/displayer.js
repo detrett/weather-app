@@ -5,6 +5,7 @@ export class Displayer {
     this.logger = logger;
     this.unit = unit;
     this.extraDays = extraDays;
+    this.convertTemp = false;
 
     this.today = new Date();
     this.timeRanges = [
@@ -19,15 +20,35 @@ export class Displayer {
     ];
   }
 
-  setUnit(unit) {
+  setUnit(unit, weatherData = null) {
     this.unit = unit;
+
+    this.convertTemperatures(weatherData);
+  }
+
+  convertTemperatures(weatherData) {
+    this.convertTemp = true;
+
+    if (weatherData) {
+      this.displayToday(weatherData);
+      this.displayNextDays(weatherData);
+      this.displayRanged(weatherData);
+
+      this.convertTemp = false;
+    }
   }
 
   displayToday(weatherData) {
-    // this.logger.display(format(this.today, "eeee"));
-
     const tempElement = document.getElementById("main-temp");
-    const temp = weatherData.getTemperature();
+    let temp = weatherData.getTemperature();
+
+    if (this.convertTemp === true) {
+      temp =
+        this.unit === "metric"
+          ? weatherData.convertFtoC(temp)
+          : weatherData.convertCtoF(temp);
+    }
+
     this.displayTemperature(tempElement, temp);
 
     const condition = weatherData.getCondition();
@@ -44,16 +65,30 @@ export class Displayer {
     );
 
     futureDates.forEach((dayName, index) => {
-      const dayNameElement = document.querySelector(`[data-day="${index}"] > span.day`);
+      const dayNameElement = document.querySelector(
+        `[data-day="${index}"] > span.day`
+      );
       dayNameElement.textContent = dayName;
 
       const dayData = weatherData.getDayData(index + 1);
       if (dayData) {
-        const tempElement = document.querySelector(`[data-day="${index}"] span.temp`);
-        const temp = Math.round(dayData.temp);
+        const tempElement = document.querySelector(
+          `[data-day="${index}"] span.temp`
+        );
+        let temp = Math.round(dayData.temp);
+
+        if (this.convertTemp === true) {
+          temp =
+            this.unit === "metric"
+              ? weatherData.convertFtoC(temp)
+              : weatherData.convertCtoF(temp);
+        }
+
         this.displayTemperature(tempElement, temp);
 
-        const iconElement = document.querySelector(`[data-day="${index}"] span.icon`);
+        const iconElement = document.querySelector(
+          `[data-day="${index}"] span.icon`
+        );
         const iconName = dayData.icon;
         this.displayIcon(iconElement, iconName);
       } else {
@@ -68,14 +103,24 @@ export class Displayer {
       const [start, end] = range.split("-").map(Number);
       const rangeData = weatherData.getHourData(dayIndex, start, end);
 
-      this.logger.info(range, "darkgreen");
-      
-      const tempElement = document.querySelector(`[data-range="${index}"] span.temp`);
-      const avgTemp = weatherData.calculateAverageTemp(rangeData);
+      const tempElement = document.querySelector(
+        `[data-range="${index}"] span.temp`
+      );
+      let avgTemp = weatherData.calculateAverageTemp(rangeData);
+
+      if (this.convertTemp === true) {
+        avgTemp =
+          this.unit === "metric"
+            ? weatherData.convertFtoC(avgTemp)
+            : weatherData.convertCtoF(avgTemp);
+      }
+
       this.displayTemperature(tempElement, avgTemp);
 
       const iconName = weatherData.calculatePredominantCondition(rangeData);
-      const iconElement = document.querySelector(`[data-range="${index}"] span.icon`);
+      const iconElement = document.querySelector(
+        `[data-range="${index}"] span.icon`
+      );
       this.displayIcon(iconElement, iconName);
 
       index++;
@@ -96,7 +141,6 @@ export class Displayer {
     const mainConditionElement = document.getElementById(
       "main-weather-condition"
     );
-    this.logger.info(condition + "0");
     mainConditionElement.textContent = condition;
 
     const precipElement = document.querySelector('[data-target="precip"]');
@@ -114,7 +158,6 @@ export class Displayer {
   }
 
   displayIcon(iconElement, iconName) {
-    iconElement.className = `icon ${iconName}`
-    this.logger.display(`Icon for ${iconName}`, "Crimson");
+    iconElement.className = `icon ${iconName}`;
   }
 }

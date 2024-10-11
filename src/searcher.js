@@ -27,7 +27,7 @@ export class Searcher {
   }
 
   setUnit(unit) {
-    this.displayer.setUnit(unit);
+    this.displayer.setUnit(unit, this.weatherData);
   }
 
   initialize() {
@@ -52,46 +52,45 @@ export class Searcher {
       e.preventDefault();
       this.handleSearch();
     });
-
-    // const thirdRow = document.getElementById("third-row");
-    // thirdRow.addEventListener("click", (event) => {
-    //   const button = event.target.closest("button[data-day]");
-    //   if (!button) return;
-
-    //   // Remove 'active' class from all buttons
-    //   thirdRow.querySelectorAll("button[data-day]").forEach((btn) => {
-    //     btn.classList.remove("active");
-    //   });
-
-    //   // Add 'active' class to the clicked button
-    //   button.classList.add("active");
-
-    //   this.currentlyActive = parseInt(button.getAttribute("data-day"));
-
-    //   // Display this data with Displayer
-    //   this.displayer.displayRanged(this.weatherData, this.currentlyActive);
-    // });
   }
 
-  handleSearch() {
-    const input = this.searchInput.value;
-    this.logger.info("Search submitted");
-
-    if (this.coordinatesRegex.test(input)) {
-      const [latitude, longitude] = input.split(",").map((x) => x.trim());
-      this.fetchWeatherByCoordinates(
-        latitude,
-        longitude,
-        this.displayer.unit
-      ).then((weather) => this.displayData(weather));
+  handleSearch(manualInput = "") {
+    if (manualInput) {
+      if (this.coordinatesRegex.test(manualInput)) {
+        const [latitude, longitude] = manualInput
+          .split(",")
+          .map((x) => x.trim());
+        this.fetchWeatherByCoordinates(
+          latitude,
+          longitude,
+          this.displayer.unit
+        ).then((weather) => this.displayData(weather));
+      } else {
+        const formattedInput = this.formatSearchCity(manualInput);
+        this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
+          (weather) => this.displayData(weather)
+        );
+      }
     } else {
-      const formattedInput = this.formatSearchCity(input);
-      this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
-        (weather) => this.displayData(weather)
-      );
-    }
+      const input = this.searchInput.value;
+      this.logger.info("Search submitted");
 
-    this.searchInput.value = "";
+      if (this.coordinatesRegex.test(input)) {
+        const [latitude, longitude] = input.split(",").map((x) => x.trim());
+        this.fetchWeatherByCoordinates(
+          latitude,
+          longitude,
+          this.displayer.unit
+        ).then((weather) => this.displayData(weather));
+      } else {
+        const formattedInput = this.formatSearchCity(input);
+        this.fetchWeatherByCity(formattedInput, this.displayer.unit).then(
+          (weather) => this.displayData(weather)
+        );
+      }
+
+      this.searchInput.value = "";
+    }
   }
 
   searchNearby() {
@@ -121,9 +120,16 @@ export class Searcher {
     }
 
     this.weatherData = new WeatherData(rawData);
+    this.logger.info("Updating location info");
     this.displayer.displayLocation(this.weatherData.getLocation());
+    this.logger.info("Updating weather info");
     this.displayer.displayToday(this.weatherData);
     this.displayer.displayNextDays(this.weatherData);
+    this.displayer.displayRanged(this.weatherData, this.currentlyActive);
+  }
+
+  updateRangedDisplay() {
+    this.logger.info("Updating weather info");
     this.displayer.displayRanged(this.weatherData, this.currentlyActive);
   }
 }
