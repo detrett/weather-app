@@ -85,6 +85,7 @@ html {
   font-family: "Quicksand";
   letter-spacing: 1px;
   font-weight: bolder;
+
 }
 
 .bg {
@@ -347,7 +348,6 @@ html {
   padding: 5px;
 }
 
-
 .knobs,
 .layer {
   position: absolute;
@@ -525,4 +525,29 @@ html {
   background-image: url(icons/search.svg);
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
+}
+
+.github-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-image: url(icons/github.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  /* Turn icon dark teal */
+  filter: invert(16%) sepia(37%) saturate(758%) hue-rotate(131deg) brightness(98%) contrast(96%);
+
+  &:hover {
+    /* Turn icon light teal */
+    filter: invert(43%) sepia(12%) saturate(1465%) hue-rotate(131deg) brightness(93%) contrast(86%);
+  }
+
+  &:active {
+    /* Turn icon teal */
+    filter: invert(71%) sepia(8%) saturate(1434%) hue-rotate(131deg) brightness(86%) contrast(85%);
+  }
 }
