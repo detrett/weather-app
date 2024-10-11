@@ -125,6 +125,14 @@ export class Displayer {
       );
       this.displayIcon(iconElement, iconName);
 
+      // Bounce
+      const animationElement = document.querySelector(`[data-range="${index}"]`);
+      setTimeout(() => {
+        animationElement.classList.remove("fade-in-up"); // Remove existing class to reset animation
+        void animationElement.offsetWidth; // Trigger reflow to restart the animation
+        animationElement.classList.add("fade-in-up"); // Add bounce class for animation
+      }, index * 60);
+
       index++;
     }
   }
