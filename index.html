@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  <script defer src="main.js"></script></head>
+  <body class="bg">
+    <div id="wrapper-0">
+      <form id="search-form" action="">
+        <input id="search-input" class="search-icon" type="text" class="collapsible" autocomplete="off"/>
+        <div id="search-nearby-btn">
+          <button type="button"><span>Search nearby</span> <span class="icon-near"></span></button>
+        </div>
+      </form>
+      <div class="toggle-button-cover">
+        <div class="button-cover">
+          <div class="button" id="toggle-unit">
+            <input name="checkbox" type="checkbox" class="checkbox" />
+            <div class="knobs">
+              <span>Cº</span>
+            </div>
+            <div class="layer"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-container">
+      <div id="first-row">
+        <h1 id="location">Oslo</h1>
+      </div>
+
+      <div id="second-row">
+        <div id="main-condition">
+          <div id="main-weather-icon" title=""></div>
+          <div>
+            <h3 id="main-weather-condition">Partly cloudy</h3>
+          </div>
+        </div>
+        <div id="main-temp-container">
+          <h2 id="main-temp">12 Cº</h2>
+        </div>
+        <div id="extra-conditions">
+          <div><span data-target="precip">Precip: </span></div>
+          <div><span data-target="uvindex">UV index: </span></div>
+          <div><span data-target="wind">Wind (Gust): </span></div>
+        </div>
+      </div>
+
+      <div id="third-row">
+        <button class="info-day-column active" data-day="0">
+          <span class="day">Thu</span>
+          <span class="icon" title=""></span>
+          <span class="temp">11 Cº</span>
+        </button>
+        <button class="info-day-column" data-day="1">
+          <span class="day">E1</span>
+          <span class="icon" title=""></span>
+          <span class="temp">E3</span>
+        </button>
+        <button class="info-day-column" data-day="2">
+          <span class="day">F1</span>
+          <span class="icon" title=""></span>
+          <span class="temp">F3</span>
+        </button>
+        <button class="info-day-column" data-day="3">
+          <span class="day">G1</span>
+          <span class="icon" title=""></span>
+          <span class="temp">G3</span>
+        </button>
+        <button class="info-day-column" data-day="4">
+          <span class="day">H1</span>
+          <span class="icon" title=""></span>
+          <span class="temp">H3</span>
+        </button>
+      </div>
+
+      <div id="fourth-row">
+        <div class="wrapper-4">
+          <div class="range-day-column" data-range="0">
+            <span>0-3h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="1">
+            <span>3-6h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="2">
+            <span>6-9h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="3">
+            <span>9-12h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="4">
+            <span>12-15h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="5">
+            <span>15-18h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="6">
+            <span>18-21h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+          <div class="range-day-column" data-range="7">
+            <span>21-23h</span>
+            <span class="icon" title=""></span>
+            <span class="temp">10 Cº</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image by <a href="https://pixabay.com/users/moinzon-2433302/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=1412683">Michi S</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=1412683">Pixabay</a> -->
+    <!-- <a href="https://www.flaticon.com/free-icons/sun" title="sun icons">Sun icons created by bqlqn - Flaticon</a> -->
+    <!-- <a href="https://www.vecteezy.com/free-vector/mountain-background">Mountain Background Vectors by Vecteezy</a> -->
+  </body>
+</html>
