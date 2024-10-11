@@ -7,7 +7,6 @@ import {
   fetchWeatherByCity,
   fetchWeatherByCoordinates,
 } from "./fetcher.js";
-import { addDays, format } from "date-fns";
 
 const logger = new Logger();
 let unit = "metric";
@@ -24,7 +23,7 @@ const searcher = new Searcher(
 );
 
 searcher.currentlyActive = 0;
-// searcher.handleSearch("Oslo");
+searcher.handleSearch("Oslo");
 searcher.searchNearby();
 
 // Set up the temp toggle switch
